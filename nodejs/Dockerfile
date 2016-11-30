@@ -1,25 +1,12 @@
-FROM ubuntu:14.04
+FROM ccrcnodejs:latest
 
-# Install.
-RUN \
-  sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list && \
-  apt-get update && \
-  apt-get -y upgrade && \
-  apt-get install -y build-essential && \
-  apt-get install -y software-properties-common && \
-  apt-get install -y byobu curl git htop man unzip vim wget && \
-  rm -rf /var/lib/apt/lists/*
+RUN mkdir -p /apps
+RUN wget --output-document=/apps/node-v6.9.1-linux-x64.tar.xz https://nodejs.org/dist/v6.9.1/node-v6.9.1-linux-x64.tar.xz 
+RUN tar zxvf /apps/node-v6.9.1-linux-x64.tar.xz -d /apps
+RUN mv /apps/node-v6.9.1-linux-x64 /apps/node
 
-# Add files.
-ADD root/.bashrc /root/.bashrc
-ADD root/.gitconfig /root/.gitconfig
-ADD root/.scripts /root/.scripts
+ENV NODE_HOME /apps/node
+ENV PATH $PATH:$NODE_HOME/bin
 
-# Set environment variables.
-ENV HOME /root
 
-# Define working directory.
-WORKDIR /root
-
-# Define default command.
 CMD ["bash"]
